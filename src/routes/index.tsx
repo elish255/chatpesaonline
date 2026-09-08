@@ -174,7 +174,7 @@ function Index() {
           {people.map((p, i) => (
             <article
               key={`${p.name}-${i}`}
-              className="flex items-center gap-4 rounded-2xl bg-card p-4 shadow-card"
+              className="flex items-center gap-3 rounded-2xl bg-card p-3 sm:gap-4 sm:p-4 shadow-card"
             >
               <div className="relative shrink-0">
                 <img
@@ -192,10 +192,10 @@ function Index() {
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="truncate font-bold text-foreground">
+                <h3 className="font-bold leading-tight text-foreground">
                   {p.name}, {p.age}
                 </h3>
-                <p className="truncate text-sm text-muted-foreground">{p.job}</p>
+                <p className="text-sm text-muted-foreground">{p.job}</p>
                 <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-secondary-foreground">
                   <Clock className="h-3.5 w-3.5" />
                   {p.duration} · {p.price}
@@ -210,7 +210,7 @@ function Index() {
               </div>
               <a
                 href={REGISTER_URL}
-                className="shrink-0 rounded-full gradient-blue px-4 py-2 text-sm font-semibold text-primary-foreground shadow-cta"
+                className="shrink-0 rounded-full gradient-blue px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm text-primary-foreground shadow-cta"
               >
                 Start Chat
               </a>
