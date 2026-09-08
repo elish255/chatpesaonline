@@ -153,3 +153,33 @@
     color: var(--color-foreground);
   }
 }
+
+@theme inline {
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+}
+
+@utility gradient-brand { background-image: var(--gradient-brand); }
+@utility gradient-blue { background-image: var(--gradient-blue); }
+@utility gradient-teal { background-image: var(--gradient-teal); }
+@utility gradient-green { background-image: var(--gradient-green); }
+@utility gradient-success { background-image: var(--gradient-success); }
+@utility shadow-card { box-shadow: var(--shadow-card); }
+@utility shadow-cta { box-shadow: var(--shadow-cta); }
+@utility text-gradient-brand {
+  background-image: var(--gradient-brand);
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes ticker-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@utility animate-ticker { animation: ticker-in 0.4s ease-out; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+@utility animate-pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
