@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as JisajiliRouteImport } from './routes/jisajili'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JisajiliRoute = JisajiliRouteImport.update({
+  id: '/jisajili',
+  path: '/jisajili',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/jisajili': typeof JisajiliRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/jisajili': typeof JisajiliRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/jisajili': typeof JisajiliRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/jisajili'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/jisajili'
+  id: '__root__' | '/' | '/jisajili'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  JisajiliRoute: typeof JisajiliRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jisajili': {
+      id: '/jisajili'
+      path: '/jisajili'
+      fullPath: '/jisajili'
+      preLoaderRoute: typeof JisajiliRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  JisajiliRoute: JisajiliRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
