@@ -12,7 +12,9 @@ import {
   Landmark,
 } from "lucide-react";
 import logo from "@/assets/logo.png";
-import { people, testimonials, transactions } from "@/data/people";
+import { people, testimonials, transactions, type Person } from "@/data/people";
+import { ChatModal } from "@/components/ChatModal";
+
 
 const REGISTER_URL = "https://kozenasite.site/register?ref=NEXAMU01";
 const SUPPORT_SMS = "sms:0791504184";
@@ -54,6 +56,8 @@ const withdrawMethods = [
 function Index() {
   const [ticker, setTicker] = useState(0);
   const [online, setOnline] = useState(3490);
+  const [active, setActive] = useState<Person | null>(null);
+
 
   useEffect(() => {
     const t = setInterval(() => setTicker((i) => (i + 1) % transactions.length), 4000);
