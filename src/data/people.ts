@@ -8,6 +8,40 @@ export type Person = {
   photo: string;
 };
 
+// Mada maalum ya kuzungumzia kwa kila mzungu (kwa mpangilio wa orodha hapo chini)
+export const topics: string[] = [
+  "Kiswahili cha kisasa kinachotumika mitaani na kazini",
+  "Mafundisho ya Kiingereza ya kila siku",
+  "Uandishi wa habari na taarifa",
+  "Biashara na maisha ya kila siku Tanzania",
+  "Afya na huduma za kiafya",
+  "Picha na utamaduni wa Tanzania",
+  "Maisha ya chuo kikuu na masomo",
+  "Safari na ndege za abiria",
+  "Lishe na chakula bora cha kitamaduni",
+  "Masoko na biashara mtandaoni",
+  "Muziki wa Bongo Fleva na dansi",
+  "Wanyamapori na mbuga za Tanzania",
+  "Mavazi na mtindo wa kisasa",
+  "Ujenzi na makazi ya watu",
+  "Huduma za afya na malezi ya wagonjwa",
+  "Mpira wa miguu na michezo",
+  "Utalii na maandishi ya safari",
+  "Fedha na uhasibu wa biashara",
+  "Kujifunza Kiswahili kutoka mwanzo",
+  "Ushauri wa kuanzisha biashara ndogo",
+  "Ufafanuzi wa lugha na utamaduni",
+  "Historia na urithi wa Tanzania",
+  "Sanaa na michoro ya kisasa",
+  "Uchumi na fursa za ajira",
+  "Redio na utangazaji",
+  "Kilimo na ufugaji",
+  "Yoga na maisha yenye afya",
+  "Sheria na haki za raia",
+  "Kahawa na kilimo cha kahawa",
+  "Muziki na ala za muziki",
+];
+
 const u = (id: string) =>
   `https://images.unsplash.com/${id}?w=240&h=240&fit=crop&crop=faces&q=80`;
 
