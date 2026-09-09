@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as JisajiliRouteImport } from './routes/jisajili'
+import { Route as LipaRouteImport } from './routes/lipa'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JisajiliRoute = JisajiliRouteImport.update({
+  id: '/jisajili',
+  path: '/jisajili',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LipaRoute = LipaRouteImport.update({
+  id: '/lipa',
+  path: '/lipa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/jisajili': typeof JisajiliRoute
+  '/lipa': typeof LipaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/jisajili': typeof JisajiliRoute
+  '/lipa': typeof LipaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/jisajili': typeof JisajiliRoute
+  '/lipa': typeof LipaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/jisajili' | '/lipa'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/jisajili' | '/lipa'
+  id: '__root__' | '/' | '/jisajili' | '/lipa'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  JisajiliRoute: typeof JisajiliRoute
+  LipaRoute: typeof LipaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jisajili': {
+      id: '/jisajili'
+      path: '/jisajili'
+      fullPath: '/jisajili'
+      preLoaderRoute: typeof JisajiliRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lipa': {
+      id: '/lipa'
+      path: '/lipa'
+      fullPath: '/lipa'
+      preLoaderRoute: typeof LipaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  JisajiliRoute: JisajiliRoute,
+  LipaRoute: LipaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

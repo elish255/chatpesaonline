@@ -12,7 +12,9 @@ import {
   Landmark,
 } from "lucide-react";
 import logo from "@/assets/logo.png";
-import { people, testimonials, transactions } from "@/data/people";
+import { people, testimonials, transactions, type Person } from "@/data/people";
+import { ChatModal } from "@/components/ChatModal";
+
 
 const REGISTER_URL = "https://kozenasite.site/register?ref=NEXAMU01";
 const SUPPORT_SMS = "sms:0791504184";
@@ -54,6 +56,8 @@ const withdrawMethods = [
 function Index() {
   const [ticker, setTicker] = useState(0);
   const [online, setOnline] = useState(3490);
+  const [active, setActive] = useState<Person | null>(null);
+
 
   useEffect(() => {
     const t = setInterval(() => setTicker((i) => (i + 1) % transactions.length), 4000);
@@ -223,12 +227,14 @@ function Index() {
                   {p.online ? "ONLINE" : "OFFLINE"}
                 </p>
               </div>
-              <a
-                href={REGISTER_URL}
+              <button
+                type="button"
+                onClick={() => setActive(p)}
                 className="shrink-0 rounded-full gradient-blue px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm text-primary-foreground shadow-cta"
               >
                 Start Chat
-              </a>
+              </button>
+
             </article>
           ))}
         </div>
@@ -308,6 +314,9 @@ function Index() {
         <Headphones className="mb-0.5 h-5 w-5" />
         Huduma kwa Wateja
       </a>
+
+      {active && <ChatModal person={active} onClose={() => setActive(null)} />}
+
     </main>
   );
 }
