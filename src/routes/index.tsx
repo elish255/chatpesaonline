@@ -123,31 +123,31 @@ function Index() {
           </p>
         </div>
 
-        {/* Balance cards */}
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl gradient-blue p-4 text-primary-foreground shadow-card">
-            <p className="flex items-center gap-2 text-xs opacity-90">
-              <TrendingUp className="h-4 w-4" /> Mapato Yote
+        {/* Balance cards — horizontal row */}
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl gradient-blue p-3 text-primary-foreground shadow-card">
+            <p className="flex items-center gap-1 text-[11px] opacity-90">
+              <TrendingUp className="h-3.5 w-3.5" /> Mapato
             </p>
-            <p className="mt-2 text-xl font-bold">TZS 0</p>
+            <p className="mt-1.5 text-base font-bold leading-tight">TZS 0</p>
           </div>
-          <div className="rounded-2xl gradient-teal p-4 text-primary-foreground shadow-card">
-            <p className="flex items-center gap-2 text-xs opacity-90">
-              <Wallet className="h-4 w-4" /> Salio la Sasa
+          <div className="rounded-2xl gradient-teal p-3 text-primary-foreground shadow-card">
+            <p className="flex items-center gap-1 text-[11px] opacity-90">
+              <Wallet className="h-3.5 w-3.5" /> Salio
             </p>
-            <p className="mt-2 text-xl font-bold">TZS 0</p>
+            <p className="mt-1.5 text-base font-bold leading-tight">TZS 0</p>
             <a
               href={REGISTER_URL}
-              className="mt-3 block rounded-full bg-card/85 py-2 text-center text-sm font-semibold text-accent"
+              className="mt-2 block rounded-full bg-card/85 py-1.5 text-center text-[11px] font-semibold text-accent"
             >
               Toa Pesa
             </a>
           </div>
-          <div className="rounded-2xl gradient-green p-4 text-primary-foreground shadow-card">
-            <p className="flex items-center gap-2 text-xs opacity-90">
-              <Banknote className="h-4 w-4" /> Pesa Inayotolewa
+          <div className="rounded-2xl gradient-green p-3 text-primary-foreground shadow-card">
+            <p className="flex items-center gap-1 text-[11px] opacity-90">
+              <Banknote className="h-3.5 w-3.5" /> Iliyotolewa
             </p>
-            <p className="mt-2 text-xl font-bold">TZS 0</p>
+            <p className="mt-1.5 text-base font-bold leading-tight">TZS 0</p>
           </div>
         </div>
 
