@@ -71,34 +71,49 @@ function Index() {
     <main className="min-h-screen bg-background pb-24">
       <div className="mx-auto w-full max-w-3xl px-4 py-6">
         {/* Header */}
-        <header className="flex items-center justify-center gap-3">
+        <header className="flex items-center gap-3">
           <img
             src={logo}
             alt="Nembo ya Chatpesa"
             width={512}
             height={512}
-            className="h-12 w-12 rounded-full bg-card object-contain shadow-card"
+            className="h-14 w-14 rounded-full bg-card object-contain p-1 shadow-card"
           />
-          <h1 className="text-3xl font-extrabold tracking-tight text-gradient-brand sm:text-4xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
             Chatpesa.online
           </h1>
         </header>
 
         {/* Top actions */}
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="mt-5 grid grid-cols-2 gap-3">
           <a
             href={REGISTER_URL}
-            className="flex items-center justify-center gap-2 rounded-full gradient-blue px-6 py-3 font-semibold text-primary-foreground shadow-cta transition-transform hover:scale-[1.02]"
+            className="flex items-center justify-center gap-2 rounded-3xl gradient-blue px-4 py-4 text-center font-bold text-primary-foreground shadow-cta transition-transform hover:scale-[1.02]"
           >
-            <Download className="h-5 w-5" /> Install App
+            <img
+              src={logo}
+              alt=""
+              aria-hidden="true"
+              className="h-7 w-7 shrink-0 rounded-full bg-card object-contain p-0.5"
+            />
+            <Download className="h-5 w-5 shrink-0" />
+            <span>Install App</span>
           </a>
           <a
             href={SUPPORT_SMS}
-            className="flex items-center justify-center gap-2 rounded-full gradient-success px-6 py-3 font-semibold text-success-foreground shadow-cta transition-transform hover:scale-[1.02]"
+            className="flex items-center justify-center gap-2 rounded-3xl gradient-success px-4 py-4 text-center font-bold text-success-foreground shadow-cta transition-transform hover:scale-[1.02]"
           >
-            <MessageCircle className="h-5 w-5" /> Huduma kwa Wateja
+            <img
+              src={logo}
+              alt=""
+              aria-hidden="true"
+              className="h-7 w-7 shrink-0 rounded-full bg-card object-contain p-0.5"
+            />
+            <MessageCircle className="h-5 w-5 shrink-0" />
+            <span>Huduma kwa Wateja</span>
           </a>
         </div>
+
 
         {/* Online counter */}
         <div className="mt-4 flex items-center gap-2 rounded-full bg-card px-5 py-3 shadow-card">
