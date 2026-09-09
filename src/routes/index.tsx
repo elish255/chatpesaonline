@@ -314,6 +314,9 @@ function Index() {
         <Headphones className="mb-0.5 h-5 w-5" />
         Huduma kwa Wateja
       </a>
+
+      {active && <ChatModal person={active} onClose={() => setActive(null)} />}
+
     </main>
   );
 }
