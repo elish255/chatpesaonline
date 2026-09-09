@@ -1,14 +1,8 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# Chatpesa.online - crawler instructions
 User-agent: *
 Allow: /
+
+# Keep private/action pages out of search results while allowing Google to crawl the site.
+Disallow: /api/
+
+Sitemap: https://chatpesaonline.site/sitemap.xml
