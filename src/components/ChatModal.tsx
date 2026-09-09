@@ -1,19 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { Send, X, ShieldCheck } from "lucide-react";
-import type { Person } from "@/data/people";
+import { people, topics, type Person } from "@/data/people";
 import { ACTIVATION_FEE } from "@/lib/session";
+import { HongeraModal } from "@/components/HongeraModal";
 
 type Msg = { from: "them" | "me"; text: string };
 
 export function ChatModal({ person, onClose }: { person: Person; onClose: () => void }) {
   const first = person.name.split(" ")[0];
+  const topic =
+    topics[people.findIndex((p) => p.name === person.name)] ?? "lugha ya Kiswahili";
   const [msgs, setMsgs] = useState<Msg[]>([
-    { from: "them", text: `Habari 👋 Mimi ni ${person.name}. Ninajifunza Kiswahili — unaweza kunifundisha? 🇹🇿` },
+    {
+      from: "them",
+      text: `Habari 👋 Mimi ni ${person.name}. Napenda sana kujadili ${topic} — unaweza kunifundisha Kiswahili? 🇹🇿`,
+    },
   ]);
   const [input, setInput] = useState("");
   const [replies, setReplies] = useState(0);
   const [locked, setLocked] = useState(false);
+  const [showHongera, setShowHongera] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +39,7 @@ export function ChatModal({ person, onClose }: { person: Person; onClose: () => 
       if (n === 1) {
         setMsgs((m) => [
           ...m,
-          { from: "them", text: "Asante! 😊 Ninasemaje salamu za jioni kwa Kiswahili vizuri?" },
+          { from: "them", text: `Asante! 😊 Kuhusu ${topic}, ninasemaje salamu za jioni kwa Kiswahili vizuri?` },
         ]);
       } else {
         setMsgs((m) => [
@@ -114,13 +120,13 @@ export function ChatModal({ person, onClose }: { person: Person; onClose: () => 
                   <p className="font-bold text-foreground">{person.price}</p>
                 </div>
               </div>
-              <Link
-                to="/jisajili"
-                search={{ partner: person.name, price: person.price }}
-                className="mt-4 block rounded-full gradient-success py-3 text-center font-bold tracking-wide text-success-foreground shadow-cta"
+              <button
+                type="button"
+                onClick={() => setShowHongera(true)}
+                className="mt-4 block w-full rounded-full gradient-success py-3 text-center font-bold tracking-wide text-success-foreground shadow-cta"
               >
                 JISAJILI SASA
-              </Link>
+              </button>
               <button onClick={onClose} className="mt-3 text-xs font-bold text-muted-foreground">
                 FUNGA
               </button>
@@ -149,6 +155,7 @@ export function ChatModal({ person, onClose }: { person: Person; onClose: () => 
           </button>
         </form>
       </div>
+      {showHongera && <HongeraModal person={person} onClose={() => setShowHongera(false)} />}
     </div>
   );
 }
