@@ -53,19 +53,18 @@ export const checkPaymentStatus = createServerFn({ method: "POST" })
     const key = process.env["MOBILIPA_API_KEY"];
     if (!key) return { ok: false as const, status: "UNKNOWN" };
 
-    const res = await fetch(`${BASE}/v1/payment/check_status`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-API-KEY": key,
+    const res = await fetch(
+      `${BASE}/v1/payment/status?order_id=${encodeURIComponent(data.order_id)}`,
+      {
+        method: "GET",
+        headers: { Accept: "application/json", "X-API-KEY": key },
       },
-      body: JSON.stringify({ order_id: data.order_id }),
-    });
+    );
 
     const body = (await res.json().catch(() => null)) as
       | { data?: { payment_status?: string; status?: string } }
       | null;
+
 
     const status = body?.data?.payment_status ?? body?.data?.status ?? "PENDING";
     return { ok: res.ok, status };
