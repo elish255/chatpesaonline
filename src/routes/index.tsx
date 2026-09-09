@@ -223,12 +223,14 @@ function Index() {
                   {p.online ? "ONLINE" : "OFFLINE"}
                 </p>
               </div>
-              <a
-                href={REGISTER_URL}
+              <button
+                type="button"
+                onClick={() => setActive(p)}
                 className="shrink-0 rounded-full gradient-blue px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm text-primary-foreground shadow-cta"
               >
                 Start Chat
-              </a>
+              </button>
+
             </article>
           ))}
         </div>
