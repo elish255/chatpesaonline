@@ -38,9 +38,14 @@ export const Route = createFileRoute("/")({
           "Wazungu maelfu wapo mtandaoni wanaotaka kufundishwa Kiswahili. Anza chati leo na toa pesa moja kwa moja.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://chatpesaonline.site/" },
+      { property: "og:image", content: "https://chatpesaonline.site/favicon.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Chatpesa — Chati na Wazungu, Pata Pesa" },
+      { name: "twitter:description", content: "Fundisha Kiswahili kwa wazungu kwa chati fupi na upate malipo." },
+      { name: "twitter:image", content: "https://chatpesaonline.site/favicon.png" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://chatpesaonline.site/" }],
   }),
 });
 
