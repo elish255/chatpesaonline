@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, CheckCircle2, Loader2, Smartphone, XCircle } from "lucide-react";
 import { ACTIVATION_FEE, loadRegistration, type Registration } from "@/lib/session";
-import { checkPaymentStatus, createPaymentOrder } from "@/lib/mobilipa.functions";
+import { checkPaymentStatus, createPaymentOrder } from "@/lib/speedpesa.functions";
 
 export const Route = createFileRoute("/lipa")({
   component: Lipa,
