@@ -1,12 +1,15 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Bell, Check, LogOut, RefreshCw, Send, X } from "lucide-react";
-import { adminReviewPayment, adminReviewWithdrawal, adminSendNotification, adminSetUserStatus, getAdminData, logout } from "@/lib/app.functions";
+import { Bell, Check, LogOut, RefreshCw, Send, X, ShieldCheck } from "lucide-react";
+import { adminLogin, adminReviewPayment, adminReviewWithdrawal, adminSendNotification, adminSetUserStatus, getAdminData, logout } from "@/lib/app.functions";
 
 export const Route = createFileRoute("/admin")({ component: Admin, head: () => ({ meta: [{ title: "Admin Panel — Chatpesa" }, { name: "robots", content: "noindex, nofollow" }] }) });
 function Admin(){
- const navigate=useNavigate(); const load=useServerFn(getAdminData); const reviewPayment=useServerFn(adminReviewPayment); const reviewWithdrawal=useServerFn(adminReviewWithdrawal); const setUserStatus=useServerFn(adminSetUserStatus); const send=useServerFn(adminSendNotification); const signOut=useServerFn(logout);
+ const navigate=useNavigate(); const location=useLocation(); const load=useServerFn(getAdminData); const reviewPayment=useServerFn(adminReviewPayment); const reviewWithdrawal=useServerFn(adminReviewWithdrawal); const setUserStatus=useServerFn(adminSetUserStatus); const send=useServerFn(adminSendNotification); const signOut=useServerFn(logout);
+ if (location.pathname === "/admin/login") {
+   return <AdminLoginView />;
+ }
  const [data,setData]=useState<{users:Record<string,unknown>[],payments:Record<string,unknown>[],withdrawals:Record<string,unknown>[],notifications:Record<string,unknown>[]}>({users:[],payments:[],withdrawals:[],notifications:[]});
  const [loading,setLoading]=useState(true); const [authorized,setAuthorized]=useState(false); const [error,setError]=useState(""); const [title,setTitle]=useState(""); const [message,setMessage]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState<"info"|"success"|"warning"|"error">("info");
  async function refresh(){
@@ -73,3 +76,42 @@ function Admin(){
 }
 function Stat({label,value}:{label:string,value:number}){return <div className="rounded-2xl bg-card p-4 shadow-card"><p className="text-xs font-bold text-muted-foreground">{label}</p><p className="mt-1 text-2xl font-black text-foreground">{value}</p></div>}
 function Empty(){return <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground">Hakuna taarifa kwa sasa.</div>}
+
+function AdminLoginView() {
+ const login = useServerFn(adminLogin);
+ const [email,setEmail]=useState("");
+ const [password,setPassword]=useState("");
+ const [error,setError]=useState("");
+ const [loading,setLoading]=useState(false);
+
+ async function submit(e:React.FormEvent){
+   e.preventDefault();
+   setError("");
+   setLoading(true);
+   try {
+     await login({data:{email,password}});
+     window.location.assign("/admin");
+   } catch (err) {
+     const code = err instanceof Error ? err.message : "";
+     if (code.includes("ADMIN_NOT_FOUND")) setError("Admin account haijapatikana.");
+     else if (code.includes("NOT_ADMIN")) setError("Account hii haina ruhusa ya admin.");
+     else if (code.includes("ADMIN_NOT_ACTIVE")) setError("Admin account haijawekwa active.");
+     else if (code.includes("INVALID_ADMIN_PASSWORD")) setError("Admin password si sahihi.");
+     else setError("Admin credentials si sahihi au database haijaconnect.");
+   } finally {
+     setLoading(false);
+   }
+ }
+
+ return <main className="grid min-h-screen place-items-center bg-background px-4">
+   <form onSubmit={submit} className="w-full max-w-md rounded-3xl bg-card p-7 shadow-card">
+     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl gradient-blue"><ShieldCheck className="h-7 w-7 text-primary-foreground"/></div>
+     <h1 className="mt-4 text-center text-2xl font-extrabold text-foreground">Chatpesa Admin</h1>
+     <p className="mt-1 text-center text-sm text-muted-foreground">Ingiza credentials za admin.</p>
+     <input required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Admin email" className="mt-5 w-full rounded-xl bg-secondary px-4 py-3 text-sm text-foreground outline-none"/>
+     <input required type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Admin password" className="mt-3 w-full rounded-xl bg-secondary px-4 py-3 text-sm text-foreground outline-none"/>
+     {error&&<p className="mt-3 rounded-xl bg-destructive/10 p-3 text-sm font-semibold text-destructive">{error}</p>}
+     <button type="submit" disabled={loading} className="mt-4 w-full rounded-full gradient-blue py-3.5 font-bold text-primary-foreground">{loading?"INAINGIA...":"INGIA ADMIN"}</button>
+   </form>
+ </main>;
+}
