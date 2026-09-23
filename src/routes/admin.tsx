@@ -9,7 +9,22 @@ function Admin(){
  const navigate=useNavigate(); const load=useServerFn(getAdminData); const reviewPayment=useServerFn(adminReviewPayment); const reviewWithdrawal=useServerFn(adminReviewWithdrawal); const setUserStatus=useServerFn(adminSetUserStatus); const send=useServerFn(adminSendNotification); const signOut=useServerFn(logout);
  const [data,setData]=useState<{users:Record<string,unknown>[],payments:Record<string,unknown>[],withdrawals:Record<string,unknown>[],notifications:Record<string,unknown>[]}>({users:[],payments:[],withdrawals:[],notifications:[]});
  const [loading,setLoading]=useState(true); const [error,setError]=useState(""); const [title,setTitle]=useState(""); const [message,setMessage]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState<"info"|"success"|"warning"|"error">("info");
- async function refresh(){setLoading(true);setError("");try{setData(await load());}catch{setError("Session ya admin imeisha au database haijaconnect.");}finally{setLoading(false);}}
+ async function refresh(){
+   setLoading(true);
+   setError("");
+   try {
+     setData(await load());
+   } catch (err) {
+     // Never leave the Admin UI visible after an expired/invalid admin session.
+     if (err instanceof Error && err.message.includes("UNAUTHORIZED")) {
+       await navigate({ to: "/admin/login", replace: true });
+       return;
+     }
+     setError("Session ya admin imeisha au database haijaconnect.");
+   } finally {
+     setLoading(false);
+   }
+ }
  useEffect(()=>{void refresh();},[]);
  async function pay(id:string,action:"approve"|"reject"){try{await reviewPayment({data:{paymentId:id,action}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}}
  async function wd(id:string,action:"approve"|"reject"){try{await reviewWithdrawal({data:{withdrawalId:id,action}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}} async function status(id:string,value:"active"|"rejected"|"pending"){try{await setUserStatus({data:{userId:id,status:value}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}}

@@ -169,15 +169,33 @@ export const logout = createServerFn({ method: "POST" }).handler(async () => {
 });
 
 export const adminLogin = createServerFn({ method: "POST" })
-  .validator(z.object({ email: z.string().email(), password: z.string().min(1) }))
+  .validator(z.object({
+    email: z.string().trim().email("Admin email si sahihi"),
+    password: z.string().min(1),
+  }))
   .handler(async ({ data }) => {
+    const email = data.email.trim().toLowerCase();
+
     const rows = await supabaseRest<Array<Record<string, unknown>>>("chatpesa_users", {
-      query: { select: "id,email,username,password_hash,password_salt,status,role", email: `eq.${data.email.toLowerCase()}`, limit: 1 },
+      query: {
+        select: "id,email,username,password_hash,password_salt,status,role",
+        email: `eq.${email}`,
+        limit: 1,
+      },
     });
+
     const admin = rows[0];
-    if (!admin || admin.role !== "admin" || admin.status !== "active" || !(await verifyPassword(data.password, String(admin.password_hash), String(admin.password_salt)))) {
-      throw new Error("INVALID_ADMIN_LOGIN");
+
+    if (!admin) throw new Error("ADMIN_NOT_FOUND");
+    if (String(admin.role).toLowerCase() !== "admin") throw new Error("NOT_ADMIN");
+    if (String(admin.status).toLowerCase() !== "active") throw new Error("ADMIN_NOT_ACTIVE");
+
+    const passwordHash = String(admin.password_hash ?? "");
+    const passwordSalt = String(admin.password_salt ?? "");
+    if (!passwordHash || !passwordSalt || !(await verifyPassword(data.password, passwordHash, passwordSalt))) {
+      throw new Error("INVALID_ADMIN_PASSWORD");
     }
+
     await setSession({ userId: String(admin.id), role: "admin" });
     return { ok: true };
   });
