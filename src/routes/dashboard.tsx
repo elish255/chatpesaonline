@@ -25,6 +25,7 @@ function Dashboard() {
   const [method, setMethod] = useState("M-Pesa");
   const [accountNumber, setAccountNumber] = useState("");
   const [notice, setNotice] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
 
   async function refresh() {
     try {
@@ -58,7 +59,49 @@ function Dashboard() {
       <div className="mx-auto max-w-3xl px-4 py-5">
         <header className="flex items-center justify-between rounded-3xl bg-card p-4 shadow-card"><div><p className="text-xs font-bold tracking-widest text-muted-foreground">CHATPESA ONLINE</p><h1 className="mt-1 text-xl font-extrabold text-foreground">Karibu, {String(user.name).split(" ")[0]} 👋</h1></div><button onClick={() => void doLogout()} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-secondary-foreground" aria-label="Logout"><LogOut className="h-4 w-4" /></button></header>
 
-        {notifications.length > 0 && <section className="mt-4 space-y-2">{notifications.map((n) => <div key={String(n.id)} className="relative rounded-3xl bg-slate-800 p-5 pr-12 text-white shadow-card"><button onClick={() => void dismiss(String(n.id))} className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/10" aria-label="Dismiss notification"><X className="h-4 w-4" /></button><div className="flex items-start gap-3"><Bell className="mt-1 h-5 w-5 shrink-0" /><div><p className="font-extrabold">{String(n.title)}</p><p className="mt-1 text-sm text-white/75">{String(n.message)}</p></div></div></div>)}</section>}
+        <div className="mt-4 flex items-center justify-end">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowNotifications((v) => !v)}
+              className="relative flex h-12 w-12 items-center justify-center rounded-full bg-card text-foreground shadow-card"
+              aria-label="Fungua notifications"
+              aria-expanded={showNotifications}
+            >
+              <Bell className="h-5 w-5" />
+              {notifications.length > 1 && <span className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black text-white">{notifications.length - 1}</span>}
+            </button>
+
+            {showNotifications && <div className="absolute right-0 top-14 z-40 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-3xl bg-card shadow-cta">
+              <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                <div>
+                  <p className="font-extrabold text-foreground">Notifications</p>
+                  <p className="text-xs text-muted-foreground">{notifications.length > 1 ? `${notifications.length - 1} ujumbe mpya` : "Hakuna notifications nyingine"}</p>
+                </div>
+                <button type="button" onClick={() => setShowNotifications(false)} className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-secondary-foreground" aria-label="Funga notifications"><X className="h-4 w-4" /></button>
+              </div>
+              <div className="max-h-[60vh] overflow-y-auto p-3">
+                {notifications.length <= 1 ? <p className="px-2 py-6 text-center text-sm text-muted-foreground">Hakuna notifications nyingine kwa sasa.</p> : <div className="space-y-2">{notifications.slice(1).map((n) => <div key={String(n.id)} className="relative rounded-2xl bg-secondary p-4 pr-11">
+                  <button onClick={() => void dismiss(String(n.id))} className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-background text-muted-foreground" aria-label="Futa notification"><X className="h-3.5 w-3.5" /></button>
+                  <div className="flex items-start gap-3">
+                    <Bell className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <div><p className="font-bold text-foreground">{String(n.title)}</p><p className="mt-1 text-sm text-muted-foreground">{String(n.message)}</p></div>
+                  </div>
+                </div>)}</div>}
+              </div>
+            </div>}
+          </div>
+        </div>
+
+        {notifications.length > 0 && <section className="mt-3">
+          <div className="relative rounded-3xl bg-slate-800 p-6 pr-14 text-white shadow-card">
+            <button onClick={() => void dismiss(String(notifications[0].id))} className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/10" aria-label="Futa notification kuu"><X className="h-4 w-4" /></button>
+            <div className="flex items-start gap-4">
+              <Bell className="mt-1 h-7 w-7 shrink-0" />
+              <div><p className="text-lg font-extrabold">{String(notifications[0].title)}</p><p className="mt-2 text-base leading-7 text-white/75">{String(notifications[0].message)}</p></div>
+            </div>
+          </div>
+        </section>}
 
         {!activeUser && <div className="mt-4 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900"><strong>Akaunti bado haija-activate.</strong> Subiri admin athibitishe malipo yako, au malipo ya moja kwa moja yakamilike.</div>}
         <section className="mt-4 rounded-3xl gradient-brand p-5 text-primary-foreground shadow-cta"><p className="text-sm font-semibold opacity-90">SALIO LAKO</p><p className="mt-1 text-4xl font-black">{money(user.balance)}</p><div className="mt-4 grid grid-cols-2 gap-2"><div className="rounded-2xl bg-white/15 p-3"><p className="text-xs opacity-80">Withdrawn</p><p className="font-bold">{money(user.withdrawn)}</p></div><div className="rounded-2xl bg-white/15 p-3"><p className="text-xs opacity-80">Status</p><p className="font-bold">{activeUser ? "ACTIVE" : "PENDING"}</p></div></div></section>
