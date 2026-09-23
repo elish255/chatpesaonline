@@ -3,8 +3,12 @@ import { clearSession, updateSession, useSession } from "@tanstack/react-start/s
 export type SessionData = { userId?: string; role?: "user" | "admin"; expiresAt?: number };
 
 function sessionConfig() {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret && process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET_MISSING");
+  }
   return {
-    password: process.env.SESSION_SECRET ?? "change-this-session-secret-in-vercel",
+    password: secret ?? "chatpesa-local-development-secret",
     name: "chatpesa-session",
     maxAge: 60 * 20,
     cookie: {

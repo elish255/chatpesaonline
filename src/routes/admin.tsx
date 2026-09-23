@@ -8,7 +8,7 @@ export const Route = createFileRoute("/admin")({ component: Admin, head: () => (
 function Admin(){
  const navigate=useNavigate(); const load=useServerFn(getAdminData); const reviewPayment=useServerFn(adminReviewPayment); const reviewWithdrawal=useServerFn(adminReviewWithdrawal); const setUserStatus=useServerFn(adminSetUserStatus); const send=useServerFn(adminSendNotification); const signOut=useServerFn(logout);
  const [data,setData]=useState<{users:Record<string,unknown>[],payments:Record<string,unknown>[],withdrawals:Record<string,unknown>[],notifications:Record<string,unknown>[]}>({users:[],payments:[],withdrawals:[],notifications:[]});
- const [loading,setLoading]=useState(true); const [error,setError]=useState(""); const [title,setTitle]=useState(""); const [message,setMessage]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState<"info"|"success"|"warning"|"error">("info");
+ const [loading,setLoading]=useState(true); const [authorized,setAuthorized]=useState(false); const [error,setError]=useState(""); const [title,setTitle]=useState(""); const [message,setMessage]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState<"info"|"success"|"warning"|"error">("info");
  async function refresh(){
    setLoading(true);
    setError("");
@@ -37,6 +37,7 @@ function Admin(){
        const result = await load();
        if (cancelled) return;
        setData(result);
+       setAuthorized(true);
      } catch (err) {
        if (cancelled) return;
        if (err instanceof Error && err.message.includes("UNAUTHORIZED")) {
@@ -53,7 +54,13 @@ function Admin(){
  async function pay(id:string,action:"approve"|"reject"){try{await reviewPayment({data:{paymentId:id,action}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}}
  async function wd(id:string,action:"approve"|"reject"){try{await reviewWithdrawal({data:{withdrawalId:id,action}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}} async function status(id:string,value:"active"|"rejected"|"pending"){try{await setUserStatus({data:{userId:id,status:value}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}}
  async function notify(e:React.FormEvent){e.preventDefault();try{await send({data:{userId:target?target:null,title,message,type}});setTitle("");setMessage("");setTarget("");await refresh();}catch{setError("Notification haikutumwa.");}}
- async function exit(){await signOut();await navigate({to:"/admin/login"});}
+ async function exit(){await signOut();setAuthorized(false);await navigate({to:"/admin/login",replace:true});}
+ if (loading && !authorized) {
+   return <main className="grid min-h-screen place-items-center bg-background px-4"><div className="w-full max-w-md rounded-3xl bg-card p-7 text-center shadow-card"><p className="text-xs font-bold tracking-widest text-muted-foreground">CHATPESA</p><h1 className="mt-2 text-2xl font-black text-foreground">Inathibitisha Admin...</h1><p className="mt-2 text-sm text-muted-foreground">Inaangalia authentication ya admin.</p></div></main>;
+ }
+ if (!authorized) {
+   return <main className="grid min-h-screen place-items-center bg-background px-4"><div className="w-full max-w-md rounded-3xl bg-card p-7 text-center shadow-card"><p className="text-sm font-semibold text-destructive">{error || "Authentication ya admin inahitajika."}</p><button onClick={()=>void navigate({to:"/admin/login",replace:true})} className="mt-4 w-full rounded-full gradient-blue py-3 font-bold text-primary-foreground">INGIA ADMIN</button></div></main>;
+ }
  const userName=(id:unknown)=>String(data.users.find(u=>String(u.id)===String(id))?.name??id);
  return <main className="min-h-screen bg-background pb-16"><div className="mx-auto max-w-6xl px-4 py-5"><header className="flex items-center justify-between rounded-3xl bg-card p-4 shadow-card"><div><p className="text-xs font-bold tracking-widest text-muted-foreground">CHATPESA</p><h1 className="text-2xl font-black text-foreground">Admin Panel</h1></div><div className="flex gap-2"><button onClick={()=>void refresh()} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><RefreshCw className="h-4 w-4"/></button><button onClick={()=>void exit()} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><LogOut className="h-4 w-4"/></button></div></header>
  {error&&<div className="mt-4 rounded-2xl bg-destructive/10 p-4 text-sm font-semibold text-destructive">{error}</div>}

@@ -1,0 +1,18 @@
+CHATPESA ADMIN SECURITY UPDATE
+
+- /admin now stays on an authentication/loading screen until the protected
+  getAdminData() server function succeeds.
+- Unauthenticated access is redirected to /admin/login.
+- All admin actions remain protected with requireAdmin().
+- Production requires SESSION_SECRET; the old predictable fallback is removed.
+- Admin session lifetime remains 20 minutes.
+
+Vercel:
+Set SESSION_SECRET to a long random secret in the project's Environment
+Variables, then redeploy.
+
+Testing:
+If an admin is already logged in and the 20-minute session is still valid,
+opening /admin directly is supposed to open the panel. That is an authenticated
+session, not a bypass. To verify the login gate, click Logout first or open
+/admin in an incognito/private browser window.
