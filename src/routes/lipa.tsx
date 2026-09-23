@@ -10,7 +10,7 @@ export const Route = createFileRoute("/lipa")({
   component: Lipa,
   head: () => ({ meta: [
     { title: "Lipa Activation — Chatpesa" },
-    { name: "description", content: `Lipa activation fee ya TZS ${ACTIVATION_FEE.toLocaleString()} kupitia FimiPay au Lipa Namba.` },
+    { name: "description", content: `Lipa activation fee ya TZS ${ACTIVATION_FEE.toLocaleString()} kupitia malipo ya moja kwa moja au Lipa Namba.` },
     { name: "robots", content: "noindex, nofollow" },
   ] }),
 });
@@ -80,7 +80,7 @@ function Lipa() {
       const res = await createPayment({ data: { phone: msisdn } });
       if (res.orderId === "already-active") { await navigate({ to: "/dashboard" }); return; }
       setOrderId(res.orderId); setStatus("PENDING"); setMessage(res.message);
-    } catch (err) { setError(err instanceof Error ? err.message : "FimiPay imeshindwa kuanzisha malipo."); }
+    } catch (err) { setError(err instanceof Error ? err.message : "Imeshindwa kuanzisha malipo."); }
     finally { setLoading(false); }
   }
 
@@ -106,17 +106,17 @@ function Lipa() {
           <p className="mt-2 text-center text-sm text-muted-foreground">Chagua njia moja ya malipo hapa chini.</p>
 
           <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl bg-secondary p-1">
-            <button type="button" onClick={() => setMethod("fimipay")} className={`rounded-xl px-3 py-3 text-sm font-extrabold ${method === "fimipay" ? "bg-card text-primary shadow-card" : "text-muted-foreground"}`}>FimiPay</button>
+            <button type="button" onClick={() => setMethod("fimipay")} className={`rounded-xl px-3 py-3 text-sm font-extrabold ${method === "fimipay" ? "bg-card text-primary shadow-card" : "text-muted-foreground"}`}>Malipo ya Moja kwa Moja</button>
             <button type="button" onClick={() => setMethod("lipa_namba")} className={`rounded-xl px-3 py-3 text-sm font-extrabold ${method === "lipa_namba" ? "bg-card text-primary shadow-card" : "text-muted-foreground"}`}>Lipa Namba</button>
           </div>
 
           {method === "fimipay" ? (
             <form onSubmit={startFimiPay} className="mt-5 space-y-4">
               <div><label className="text-sm font-semibold text-foreground">Namba ya simu</label><input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0712345678" className="mt-1 w-full rounded-xl bg-secondary px-4 py-3 text-sm text-foreground outline-none" /></div>
-              <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground"><strong className="text-foreground">FimiPay:</strong> bonyeza LIPA SASA, kisha thibitisha push kwenye simu yako. Mfumo utaangalia order status na account ita-activate moja kwa moja ikipatikana malipo yaliyofanikiwa.</div>
+              <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground"><strong className="text-foreground">Malipo ya moja kwa moja:</strong> bonyeza LIPA SASA, kisha thibitisha push kwenye simu yako. Mfumo utaangalia order status na account ita-activate moja kwa moja ikipatikana malipo yaliyofanikiwa.</div>
               {error && <p className="rounded-xl bg-destructive/10 p-3 text-sm font-semibold text-destructive">{error}</p>}
               {message && <p className="rounded-xl bg-success/10 p-3 text-sm font-semibold text-success">{message}</p>}
-              <button type="submit" disabled={loading || !!orderId} className="flex w-full items-center justify-center gap-2 rounded-full gradient-success py-3.5 font-bold text-success-foreground shadow-cta disabled:opacity-60">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Smartphone className="h-4 w-4" />}{orderId ? "INASUBIRI UTHIBITISHO..." : "LIPA SASA KWA FIMIPAY"}</button>
+              <button type="submit" disabled={loading || !!orderId} className="flex w-full items-center justify-center gap-2 rounded-full gradient-success py-3.5 font-bold text-success-foreground shadow-cta disabled:opacity-60">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Smartphone className="h-4 w-4" />}{orderId ? "INASUBIRI UTHIBITISHO..." : "LIPA SASA"}</button>
               {orderId && <div className="rounded-2xl border border-border p-4 text-center"><Clock3 className="mx-auto h-7 w-7 animate-pulse text-primary" /><p className="mt-2 text-sm font-bold text-foreground">Subiri uthibitisho wa malipo</p><p className="mt-1 text-xs text-muted-foreground">Order: {orderId} · Status: {status}</p></div>}
             </form>
           ) : (
