@@ -2,13 +2,13 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Bell, Check, LogOut, RefreshCw, Send, X } from "lucide-react";
-import { adminReviewPayment, adminReviewWithdrawal, adminSendNotification, adminSetUserStatus, getAdminData, logout } from "@/lib/app.functions";
+import { adminReviewPayment, adminReviewWithdrawal, adminSendNotification, adminSetUserStatus, enterAdminPanel, getAdminData, logout } from "@/lib/app.functions";
 
 export const Route = createFileRoute("/admin")({ component: Admin, head: () => ({ meta: [{ title: "Admin Panel — Chatpesa" }, { name: "robots", content: "noindex, nofollow" }] }) });
 function Admin(){
- const navigate=useNavigate(); const load=useServerFn(getAdminData); const reviewPayment=useServerFn(adminReviewPayment); const reviewWithdrawal=useServerFn(adminReviewWithdrawal); const setUserStatus=useServerFn(adminSetUserStatus); const send=useServerFn(adminSendNotification); const signOut=useServerFn(logout);
+ const navigate=useNavigate(); const enter=useServerFn(enterAdminPanel); const load=useServerFn(getAdminData); const reviewPayment=useServerFn(adminReviewPayment); const reviewWithdrawal=useServerFn(adminReviewWithdrawal); const setUserStatus=useServerFn(adminSetUserStatus); const send=useServerFn(adminSendNotification); const signOut=useServerFn(logout);
  const [data,setData]=useState<{users:Record<string,unknown>[],payments:Record<string,unknown>[],withdrawals:Record<string,unknown>[],notifications:Record<string,unknown>[]}>({users:[],payments:[],withdrawals:[],notifications:[]});
- const [loading,setLoading]=useState(true); const [error,setError]=useState(""); const [title,setTitle]=useState(""); const [message,setMessage]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState<"info"|"success"|"warning"|"error">("info");
+ const [loading,setLoading]=useState(true); const [authorized,setAuthorized]=useState(false); const [error,setError]=useState(""); const [title,setTitle]=useState(""); const [message,setMessage]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState<"info"|"success"|"warning"|"error">("info");
  async function refresh(){
    setLoading(true);
    setError("");
@@ -31,6 +31,7 @@ function Admin(){
  async function notify(e:React.FormEvent){e.preventDefault();try{await send({data:{userId:target?target:null,title,message,type}});setTitle("");setMessage("");setTarget("");await refresh();}catch{setError("Notification haikutumwa.");}}
  async function exit(){await signOut();await navigate({to:"/admin/login"});}
  const userName=(id:unknown)=>String(data.users.find(u=>String(u.id)===String(id))?.name??id);
+ if (!authorized) return <main className="grid min-h-screen place-items-center bg-background px-4"><div className="rounded-3xl bg-card p-8 text-center shadow-card"><p className="font-bold text-foreground">Inathibitisha admin...</p></div></main>;
  return <main className="min-h-screen bg-background pb-16"><div className="mx-auto max-w-6xl px-4 py-5"><header className="flex items-center justify-between rounded-3xl bg-card p-4 shadow-card"><div><p className="text-xs font-bold tracking-widest text-muted-foreground">CHATPESA</p><h1 className="text-2xl font-black text-foreground">Admin Panel</h1></div><div className="flex gap-2"><button onClick={()=>void refresh()} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><RefreshCw className="h-4 w-4"/></button><button onClick={()=>void exit()} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><LogOut className="h-4 w-4"/></button></div></header>
  {error&&<div className="mt-4 rounded-2xl bg-destructive/10 p-4 text-sm font-semibold text-destructive">{error}</div>}
  <div className="mt-4 grid gap-3 sm:grid-cols-4"><Stat label="Users" value={data.users.length}/><Stat label="Pending deposits" value={data.payments.filter(x=>x.status==="pending").length}/><Stat label="Pending withdrawals" value={data.withdrawals.filter(x=>x.status==="pending").length}/><Stat label="Notifications" value={data.notifications.length}/></div>

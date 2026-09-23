@@ -1,6 +1,6 @@
 import { clearSession, updateSession, useSession } from "@tanstack/react-start/server";
 
-export type SessionData = { userId?: string; role?: "user" | "admin"; expiresAt?: number };
+export type SessionData = { userId?: string; role?: "user" | "admin"; expiresAt?: number; adminEntry?: string | null };
 
 function sessionConfig() {
   return {
@@ -32,6 +32,18 @@ export async function setSession(data: SessionData) {
 
 export async function logoutSession() {
   await clearSession(sessionConfig());
+}
+
+export async function consumeAdminEntry() {
+  const session = await readSession();
+  if (!session.userId || session.role !== "admin" || !session.adminEntry) {
+    throw new Error("ADMIN_ENTRY_REQUIRED");
+  }
+  await updateSession(sessionConfig(), {
+    ...session,
+    adminEntry: null,
+  });
+  return session.userId;
 }
 
 export async function requireUser() {

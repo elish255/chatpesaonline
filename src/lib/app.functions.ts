@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { logoutSession, readSession, requireAdmin, requireUser, setSession } from "@/lib/auth";
+import { consumeAdminEntry, logoutSession, readSession, requireAdmin, requireUser, setSession } from "@/lib/auth";
 import { supabaseRest } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/security";
 import { ACTIVATION_FEE, LIPA_BUSINESS, LIPA_NUMBER } from "@/lib/session";
@@ -196,9 +196,14 @@ export const adminLogin = createServerFn({ method: "POST" })
       throw new Error("INVALID_ADMIN_PASSWORD");
     }
 
-    await setSession({ userId: String(admin.id), role: "admin" });
+    await setSession({ userId: String(admin.id), role: "admin", adminEntry: crypto.randomUUID() });
     return { ok: true };
   });
+
+export const enterAdminPanel = createServerFn({ method: "POST" }).handler(async () => {
+  await consumeAdminEntry();
+  return { ok: true };
+});
 
 export const getAdminData = createServerFn({ method: "GET" }).handler(async () => {
   await requireAdmin();

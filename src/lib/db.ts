@@ -6,8 +6,14 @@ function env(name: string) {
   return value.replace(/\/$/, "");
 }
 
+function serverKey() {
+  // Server-side database access must use the Supabase secret/service-role key.
+  // Never expose this key to the browser.
+  return env("SUPABASE_SERVICE_ROLE_KEY");
+}
+
 function headers(extra: Record<string, string> = {}) {
-  const key = env("SUPABASE_SERVICE_ROLE_KEY");
+  const key = serverKey();
   return {
     apikey: key,
     Authorization: `Bearer ${key}`,
@@ -46,7 +52,7 @@ export async function supabaseRest<T = DbRow[]>(
 
 export async function supabaseRpc<T = DbRow[]>(fn: string, body: unknown): Promise<T> {
   const url = `${env("SUPABASE_URL")}/rest/v1/rpc/${fn}`;
-  const key = env("SUPABASE_SERVICE_ROLE_KEY");
+  const key = serverKey();
   const res = await fetch(url, {
     method: "POST",
     headers: {
