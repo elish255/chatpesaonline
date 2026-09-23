@@ -25,7 +25,29 @@ function Admin(){
      setLoading(false);
    }
  }
- useEffect(()=>{void refresh();},[]);
+ useEffect(()=>{
+   let cancelled = false;
+   (async()=>{
+     setLoading(true);
+     setError("");
+     try {
+       // adminEntry is created only after a successful Admin Login and is
+       // consumed once here. This makes every fresh visit to /admin require
+       // the admin to sign in again.
+       await enter();
+       if (cancelled) return;
+       setAuthorized(true);
+       await refresh();
+     } catch {
+       if (cancelled) return;
+       setAuthorized(false);
+       await navigate({ to: "/admin/login", replace: true });
+     } finally {
+       if (!cancelled) setLoading(false);
+     }
+   })();
+   return () => { cancelled = true; };
+ },[]);
  async function pay(id:string,action:"approve"|"reject"){try{await reviewPayment({data:{paymentId:id,action}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}}
  async function wd(id:string,action:"approve"|"reject"){try{await reviewWithdrawal({data:{withdrawalId:id,action}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}} async function status(id:string,value:"active"|"rejected"|"pending"){try{await setUserStatus({data:{userId:id,status:value}});await refresh();}catch(e){setError(e instanceof Error?e.message:"Imeshindikana.");}}
  async function notify(e:React.FormEvent){e.preventDefault();try{await send({data:{userId:target?target:null,title,message,type}});setTitle("");setMessage("");setTarget("");await refresh();}catch{setError("Notification haikutumwa.");}}
