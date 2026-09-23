@@ -9,9 +9,9 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Chatpesa.online — Chati na Wazungu, Pata Pesa" },
+      { title: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
       { name: "description", content: "Chatpesa.online: jisajili, anza kuchat na kupata malipo." },
-      { property: "og:title", content: "Chatpesa.online" },
+      { property: "og:title", content: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
       { property: "og:description", content: "Chati na Wazungu, pata pesa." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://chatpesaonline.site/" },

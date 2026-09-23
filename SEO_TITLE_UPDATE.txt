@@ -1,0 +1,13 @@
+HOMEPAGE SEO TITLE UPDATE
+
+Homepage title:
+Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa
+
+Updated:
+- src/routes/__root.tsx
+- src/routes/index.tsx
+- index.html (when present)
+- Homepage Open Graph title
+
+No dashboard, admin, authentication, payment, or chat functionality was changed.
+Google may take time to refresh an already-indexed search result after deployment.

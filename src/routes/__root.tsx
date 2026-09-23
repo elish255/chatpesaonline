@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Chatpesa.online — Chati na Wazungu, Pata Pesa" },
+      { title: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
       { name: "description", content: "Chatpesa.online — jisajili, lipia TZS 16,000, kisha anza kuchat na kulipwa." },
       { property: "og:site_name", content: "Chatpesa.online" },
       { property: "og:type", content: "website" },

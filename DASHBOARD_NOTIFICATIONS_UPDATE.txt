@@ -1,0 +1,10 @@
+USER DASHBOARD NOTIFICATIONS UPDATE
+
+- The newest notification is shown prominently as the main notification card.
+- All older notifications are hidden from the main dashboard.
+- A bell button appears below the header.
+- The red badge shows the number of older notifications.
+- Tapping the bell opens a scrollable notifications panel.
+- Each older notification can be dismissed individually.
+- The main/latest notification can also be dismissed with its X button.
+- Existing withdrawal, chat, balance, and authentication functionality is unchanged.

@@ -16,3 +16,13 @@ If an admin is already logged in and the 20-minute session is still valid,
 opening /admin directly is supposed to open the panel. That is an authenticated
 session, not a bypass. To verify the login gate, click Logout first or open
 /admin in an incognito/private browser window.
+
+
+ROUTE FIX (2026-09-23):
+The deployed page was showing the /admin authentication guard while the
+browser URL was /admin/login. This means the deployed route resolution/build
+was serving the Admin component for the login URL. The Admin component now
+contains a path-safe fallback: when pathname is /admin/login it renders the
+real Email + Password admin login form before attempting any admin data load.
+This prevents the login route from getting stuck on "Authentication ya admin
+inahitajika" even if an old/generated route tree is present.
