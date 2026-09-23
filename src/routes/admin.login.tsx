@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ShieldCheck } from "lucide-react";
@@ -6,8 +6,8 @@ import { adminLogin } from "@/lib/app.functions";
 
 export const Route = createFileRoute("/admin/login")({ component: AdminLogin, head: () => ({ meta: [{ title: "Admin Login — Chatpesa" }, { name: "robots", content: "noindex, nofollow" }] }) });
 function AdminLogin() {
-  const navigate = useNavigate(); const login = useServerFn(adminLogin); const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [error,setError]=useState(""); const [loading,setLoading]=useState(false);
-  async function submit(e: React.FormEvent){e.preventDefault();setError("");setLoading(true);try{await login({data:{email,password}});await navigate({to:"/admin"});}catch (err) {
+ const login = useServerFn(adminLogin); const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [error,setError]=useState(""); const [loading,setLoading]=useState(false);
+  async function submit(e: React.FormEvent){e.preventDefault();setError("");setLoading(true);try{await login({data:{email,password}});window.location.assign("/admin");}catch (err) {
       const code = err instanceof Error ? err.message : "";
       if (code.includes("ADMIN_NOT_FOUND")) setError("Admin account haijapatikana.");
       else if (code.includes("NOT_ADMIN")) setError("Account hii haina ruhusa ya admin.");
