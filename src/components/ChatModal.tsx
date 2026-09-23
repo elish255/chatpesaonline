@@ -235,12 +235,12 @@ export function ChatModal({ person, onClose, authenticated = false }: { person: 
 
     setInput("");
     const nextTurn = turn + 1;
-    const isLast = nextTurn >= 10;
+    const isLast = nextTurn >= 20;
     setMsgs((current) => [...current, { from: "me", text }]);
     setTurn(nextTurn);
 
     window.setTimeout(() => {
-      const replyIndex = nextTurn >= 10 ? conversation.replies.length - 1 : Math.min(nextTurn - 1, conversation.replies.length - 2);
+      const replyIndex = Math.min(nextTurn - 1, conversation.replies.length - 1);
       const reply = conversation.replies[replyIndex] ?? "Asante sana! 😊";
       setMsgs((current) => [...current, { from: "them", text: isLast ? `${reply} 💙` : reply }]);
       if (isLast) void finish();

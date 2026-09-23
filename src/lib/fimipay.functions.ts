@@ -28,7 +28,7 @@ export const createFimiPayment = createServerFn({ method: "POST" })
   .validator(paymentInput)
   .handler(async ({ data }) => {
     const userId = await requireUser();
-    const users = await supabaseRest<Array<Record<string, unknown>>>("app_users", {
+    const users = await supabaseRest<Array<Record<string, unknown>>>("chatpesa_users", {
       query: { select: "id,name,username,email,phone,status", id: `eq.${userId}`, limit: 1 },
     });
     const user = users[0];
@@ -57,7 +57,7 @@ export const createFimiPayment = createServerFn({ method: "POST" })
     const orderId = String(nested?.order_id ?? body?.order_id ?? "");
     if (!orderId) throw new Error("FimiPay haikurudisha order_id.");
 
-    await supabaseRest("activation_payments", {
+    await supabaseRest("chatpesa_activation_payments", {
       method: "POST",
       body: {
         user_id: userId,
@@ -81,7 +81,7 @@ export const checkFimiPayment = createServerFn({ method: "POST" })
   .validator(z.object({ orderId: z.string().min(2).max(200) }))
   .handler(async ({ data }) => {
     const userId = await requireUser();
-    const payments = await supabaseRest<Array<Record<string, unknown>>>("activation_payments", {
+    const payments = await supabaseRest<Array<Record<string, unknown>>>("chatpesa_activation_payments", {
       query: { select: "id,status", external_id: `eq.${data.orderId}`, user_id: `eq.${userId}`, limit: 1 },
     });
     const payment = payments[0];
@@ -100,17 +100,17 @@ export const checkFimiPayment = createServerFn({ method: "POST" })
     const status = String(nested?.payment_status ?? nested?.status ?? body?.payment_status ?? body?.status ?? "PENDING").toUpperCase();
 
     if (status === "SUCCESS") {
-      await supabaseRest("activation_payments", {
+      await supabaseRest("chatpesa_activation_payments", {
         method: "PATCH",
         query: { id: `eq.${String(payment.id)}` },
         body: { status: "approved", confirmed_at: new Date().toISOString(), metadata: body },
       });
-      await supabaseRest("app_users", {
+      await supabaseRest("chatpesa_users", {
         method: "PATCH",
         query: { id: `eq.${userId}` },
         body: { status: "active", activated_at: new Date().toISOString() },
       });
-      await supabaseRest("notifications", {
+      await supabaseRest("chatpesa_notifications", {
         method: "POST",
         body: { user_id: userId, title: "Akaunti imefunguliwa 🎉", message: "Malipo yako ya FimiPay yamefanikiwa. Akaunti yako iko active; karibu Dashboard.", type: "success" },
       });
@@ -118,7 +118,7 @@ export const checkFimiPayment = createServerFn({ method: "POST" })
     }
 
     if (["CANCELLED", "USERCANCELLED", "REJECTED"].includes(status)) {
-      await supabaseRest("activation_payments", {
+      await supabaseRest("chatpesa_activation_payments", {
         method: "PATCH",
         query: { id: `eq.${String(payment.id)}` },
         body: { status: "rejected", metadata: body },
