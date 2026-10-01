@@ -10,16 +10,17 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
-      { name: "description", content: "Chatpesa.online: jisajili, anza kuchat na kupata malipo." },
+      { name: "description", content: "Chatpesa.online inakuwezesha kufundisha Kiswahili wazungu kwa chati, video na voice call na kulipwa kuanzia TZS 70000 hadi 150000 kwa kila kipindi." },
+      { name: "keywords", content: "Chatpesa online, Chatpesaonline, Chatpesa.online, Chatpesa, kufundisha Kiswahili wazungu, chat na wazungu, kulipwa kwa chat" },
       { property: "og:title", content: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
-      { property: "og:description", content: "Chati na Wazungu, pata pesa." },
+      { property: "og:description", content: "Chatpesa.online inakuwezesha kufundisha Kiswahili wazungu kwa chati, video na voice call na kulipwa kuanzia TZS 70000 hadi 150000 kwa kila kipindi." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://chatpesaonline.site/" },
-      { property: "og:image", content: "https://chatpesaonline.site/chatpesa-logo.jpg" },
+      { property: "og:url", content: "https://chatpesa.online/" },
+      { property: "og:image", content: "https://chatpesa.online/chatpesa-logo.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "canonical", href: "https://chatpesaonline.site/" },
+      { rel: "canonical", href: "https://chatpesa.online/" },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
@@ -100,6 +101,18 @@ function Index() {
             </Link>
           </div>
         </header>
+
+        <section className="mt-4 rounded-3xl bg-card p-5 shadow-card" aria-labelledby="chatpesa-seo-heading">
+          <h2 id="chatpesa-seo-heading" className="text-lg font-extrabold text-foreground">
+            Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Chatpesa.online inakuwezesha kufundisha Kiswahili wazungu kwa chati, video na voice call na kulipwa kuanzia TZS 70000 hadi 150000 kwa kila kipindi.
+          </p>
+          <p className="mt-2 text-xs leading-5 text-muted-foreground">
+            Chatpesa online, Chatpesaonline, Chatpesa.online na Chatpesa ni majina yanayotumika kutafuta huduma za Chatpesa.
+          </p>
+        </section>
 
         <div className="mt-4 flex items-center gap-3 rounded-full bg-card px-5 py-3.5 shadow-card">
           <span className="h-3 w-3 animate-pulse-dot rounded-full bg-success" />

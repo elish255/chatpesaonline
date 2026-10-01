@@ -2,7 +2,7 @@
 User-agent: *
 Allow: /
 
-# Keep private/action pages out of search results while allowing Google to crawl the site.
+# Keep private/action API endpoints out of search results.
 Disallow: /api/
 
-Sitemap: https://chatpesaonline.site/sitemap.xml
+Sitemap: https://chatpesa.online/sitemap.xml

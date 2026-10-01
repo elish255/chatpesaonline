@@ -78,8 +78,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
-      { name: "description", content: "Chatpesa.online — jisajili, lipia TZS 16,000, kisha anza kuchat na kulipwa." },
+      { name: "description", content: "Chatpesa.online inakuwezesha kufundisha Kiswahili wazungu kwa chati, video na voice call na kulipwa kuanzia TZS 70000 hadi 150000 kwa kila kipindi." },
+      { name: "keywords", content: "Chatpesa online, Chatpesaonline, Chatpesa.online, Chatpesa, kufundisha Kiswahili wazungu, chat na wazungu, kulipwa kwa chat" },
       { property: "og:site_name", content: "Chatpesa.online" },
+      { property: "og:title", content: "Chatpesa.online — Fundisha Kiswahili, Chati na Wazungu, Lipwa" },
+      { property: "og:description", content: "Chatpesa.online inakuwezesha kufundisha Kiswahili wazungu kwa chati, video na voice call na kulipwa kuanzia TZS 70000 hadi 150000 kwa kila kipindi." },
+      { property: "og:url", content: "https://chatpesa.online/" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
@@ -91,6 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "canonical", href: "https://chatpesa.online/" },
     ],
   }),
 
@@ -105,6 +110,25 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="sw">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Chatpesa.online",
+              url: "https://chatpesa.online/",
+              description:
+                "Chatpesa.online inakuwezesha kufundisha Kiswahili wazungu kwa chati, video na voice call na kulipwa kuanzia TZS 70000 hadi 150000 kwa kila kipindi.",
+              inLanguage: "sw",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://chatpesa.online/?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
       </head>
       <body>
         {children}
