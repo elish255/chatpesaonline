@@ -5,4 +5,4 @@ Allow: /
 # Keep private/action API endpoints out of search results.
 Disallow: /api/
 
-Sitemap: https://chatpesa.online/sitemap.xml
+Sitemap: https://chatpesaonline.site/sitemap.xml
