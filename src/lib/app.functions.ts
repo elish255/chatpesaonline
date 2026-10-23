@@ -3,7 +3,7 @@ import { z } from "zod";
 import { logoutSession, readSession, requireAdmin, requireUser, setSession } from "@/lib/auth";
 import { supabaseRest } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/security";
-import { ACTIVATION_FEE, LIPA_BUSINESS, LIPA_NUMBER } from "@/lib/session";
+import { ACTIVATION_FEE } from "@/lib/session";
 import { people } from "@/data/people";
 
 const registrationSchema = z.object({
@@ -81,30 +81,6 @@ export const getMe = createServerFn({ method: "GET" }).handler(async () => {
   return { user: rows[0] ?? null };
 });
 
-export const submitManualPayment = createServerFn({ method: "POST" })
-  .validator(z.object({ phone: z.string().regex(/^\d{9,15}$/) }))
-  .handler(async ({ data }) => {
-    const userId = await requireUser();
-    const phone = normalizePhone(data.phone);
-    await supabaseRest("chatpesa_activation_payments", {
-      method: "POST",
-      body: {
-        user_id: userId,
-        method: "lipa_namba",
-        amount: ACTIVATION_FEE,
-        phone,
-        external_id: LIPA_NUMBER,
-        status: "pending",
-        metadata: { business: LIPA_BUSINESS, lipa_number: LIPA_NUMBER },
-      },
-    });
-    await supabaseRest("chatpesa_notifications", {
-      method: "POST",
-      body: { user_id: userId, title: "Malipo yametumwa kwa ukaguzi", message: "Tumepokea taarifa yako ya Lipa Namba. Admin atakagua muamala kabla ya ku-activate akaunti.", type: "info" },
-    });
-    return { ok: true };
-  });
-
 export const getNotifications = createServerFn({ method: "GET" }).handler(async () => {
   const userId = await requireUser();
   const rows = await supabaseRest<Array<Record<string, unknown>>>("chatpesa_notifications", {
@@ -158,7 +134,7 @@ export const requestWithdrawal = createServerFn({ method: "POST" })
     });
     await supabaseRest("chatpesa_notifications", {
       method: "POST",
-      body: { user_id: userId, title: "Withdrawal imeombwa", message: `Ombi la withdrawal la TZS ${data.amount.toLocaleString()} limetumwa kwa admin kwa ukaguzi.`, type: "info" },
+      body: { user_id: userId, title: "Withdrawal imeombwa", message: `Ombi la withdrawal la TZS ${data.amount.toLocaleString()} limetumwa kwa ukaguzi.`, type: "info" },
     });
     return { ok: true };
   });
@@ -265,10 +241,10 @@ export const adminReviewWithdrawal = createServerFn({ method: "POST" })
       if (balance < amount) throw new Error("INSUFFICIENT_BALANCE");
       await supabaseRest("chatpesa_users", { method: "PATCH", query: { id: `eq.${userId}` }, body: { balance: balance - amount, withdrawn: Number(users[0]?.withdrawn ?? 0) + amount } });
       await supabaseRest("chatpesa_withdrawals", { method: "PATCH", query: { id: `eq.${data.withdrawalId}` }, body: { status: "approved", reviewed_at: new Date().toISOString() } });
-      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imeidhinishwa", message: `Withdrawal ya TZS ${amount.toLocaleString()} imeidhinishwa na admin.`, type: "success" } });
+      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imeidhinishwa", message: `Withdrawal ya TZS ${amount.toLocaleString()} imeidhinishwa.`, type: "success" } });
     } else {
       await supabaseRest("chatpesa_withdrawals", { method: "PATCH", query: { id: `eq.${data.withdrawalId}` }, body: { status: "rejected", reviewed_at: new Date().toISOString() } });
-      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imekataliwa", message: "Admin amekataa ombi lako la withdrawal. Wasiliana na support kwa maelezo zaidi.", type: "error" } });
+      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imekataliwa", message: "Mfumo umekataa ombi lako la withdrawal. Wasiliana na support kwa maelezo zaidi.", type: "error" } });
     }
     return { ok: true };
   });

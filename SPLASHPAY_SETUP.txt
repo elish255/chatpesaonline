@@ -1,0 +1,7 @@
+Chatpesaonline SplashPay setup
+
+In Vercel Project Settings -> Environment Variables, add:
+SPLASHPAY_API_KEY = SplashPay API key (pk_live_... for live)
+SPLASHPAY_API_SECRET = SplashPay API secret (sk_live_... for live)
+
+Redeploy after saving. Automatic payments only; Lipa Namba/manual payment has been removed. References start with INV-. This version polls POST /api/v1/payments/check-status with JSON body { "reference": "INV-..." }; confirm that exact status endpoint against SplashPay's current documentation before processing live payments, as the supplied documentation excerpt did not include the endpoint path.

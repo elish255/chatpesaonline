@@ -9,8 +9,6 @@ export type Registration = {
 };
 
 export const ACTIVATION_FEE = 16000;
-export const LIPA_NUMBER = "251161660";
-export const LIPA_BUSINESS = "ASSERT BRIDGE";
 
 const KEY = "chatpesa_registration";
 

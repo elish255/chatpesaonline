@@ -5,7 +5,6 @@ Chatpesa.online is a TanStack Start app with:
 - Supabase/Postgres persistence for users, activation payments, withdrawals, notifications and chat payouts.
 - TZS 16,000 activation fee.
 - Automatic Tanzania mobile payment using the documented payment order and status endpoints. Successful FimiPay payments activate the account automatically.
-- Lipa Namba `251161660` / `ASSERT BRIDGE` manual verification flow.
 - User registration with a unique Username + Password login.
 - Realistic scripted conversation flows for the listed chat profiles. The conversation is limited internally to exactly 20 visible messages and does not display a countdown.
 - Completed chat payout popup showing the payout and that the money is in Balance. The popup can be dismissed.
@@ -29,7 +28,9 @@ Chatpesa.online is a TanStack Start app with:
 ## Payment details
 
 - Activation fee: TZS 16,000
-- Lipa Namba: 251161660
 - Business name: ASSERT BRIDGE
 - Manual flow: user pays -> enters the phone used for payment -> NIMELIPIA -> admin reviews -> approve activates the account.
 - Automatic payment flow: user starts payment -> mobile-money prompt is sent -> order status is checked -> successful payment activates the account automatically.
+
+
+SplashPay automatic activation payments only. Configure `SPLASHPAY_API_KEY` and `SPLASHPAY_API_SECRET` as server-side Vercel Environment Variables. Payment references begin with `INV-`. No Lipa Namba/manual payment option is available.
