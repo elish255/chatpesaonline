@@ -10,16 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as JisajiliRouteImport } from './routes/jisajili'
 import { Route as LipaRouteImport } from './routes/lipa'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JisajiliRoute = JisajiliRouteImport.update({
@@ -37,66 +47,77 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/admin/login',
-  path: '/admin/login',
-  getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/jisajili': typeof JisajiliRoute
   '/lipa': typeof LipaRoute
   '/login': typeof LoginRoute
-  '/dashboard': typeof DashboardRoute
-  '/admin': typeof AdminRoute
   '/admin/login': typeof AdminLoginRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/jisajili': typeof JisajiliRoute
   '/lipa': typeof LipaRoute
   '/login': typeof LoginRoute
-  '/dashboard': typeof DashboardRoute
-  '/admin': typeof AdminRoute
   '/admin/login': typeof AdminLoginRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/jisajili': typeof JisajiliRoute
   '/lipa': typeof LipaRoute
   '/login': typeof LoginRoute
-  '/dashboard': typeof DashboardRoute
-  '/admin': typeof AdminRoute
   '/admin/login': typeof AdminLoginRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/jisajili' | '/lipa' | '/login' | '/dashboard' | '/admin' | '/admin/login'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/jisajili'
+    | '/lipa'
+    | '/login'
+    | '/admin/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/jisajili' | '/lipa' | '/login' | '/dashboard' | '/admin' | '/admin/login'
-  id: '__root__' | '/' | '/jisajili' | '/lipa' | '/login' | '/dashboard' | '/admin' | '/admin/login'
+  to:
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/jisajili'
+    | '/lipa'
+    | '/login'
+    | '/admin/login'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/jisajili'
+    | '/lipa'
+    | '/login'
+    | '/admin/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
   JisajiliRoute: typeof JisajiliRoute
   LipaRoute: typeof LipaRoute
   LoginRoute: typeof LoginRoute
-  DashboardRoute: typeof DashboardRoute
-  AdminRoute: typeof AdminRoute
-  AdminLoginRoute: typeof AdminLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -106,6 +127,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jisajili': {
@@ -129,38 +164,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/login': {
       id: '/admin/login'
-      path: '/admin/login'
+      path: '/login'
       fullPath: '/admin/login'
       preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
+interface AdminRouteChildren {
+  AdminLoginRoute: typeof AdminLoginRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLoginRoute: AdminLoginRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  DashboardRoute: DashboardRoute,
   JisajiliRoute: JisajiliRoute,
   LipaRoute: LipaRoute,
   LoginRoute: LoginRoute,
-  DashboardRoute: DashboardRoute,
-  AdminRoute: AdminRoute,
-  AdminLoginRoute: AdminLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
