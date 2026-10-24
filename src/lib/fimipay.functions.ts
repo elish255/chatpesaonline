@@ -26,15 +26,15 @@ export const createFimiPayment = createServerFn({ method: "POST" }).validator(pa
   const reference = newReference();
   const res = await fetch(`${API_BASE}/payments/mobile-money`, { method: "POST", headers: splashHeaders(reference), body: JSON.stringify({
     amount: ACTIVATION_FEE, currency: "TZS", reference, phone: data.phone,
-    customer_name: String(user.name || user.username || "Chatpesa User"), customer_email: String(user.email || `${userId}@chatpesaonline`),
+    customer_name: String(user.name || user.username || "Chatpesa User"), customer_email: String(user.email || `${userId}@chatpesa.online`),
     metadata: { user_id: userId, purpose: "activation", product: "Chatpesa account activation" },
   }) });
   const body = await res.json().catch(() => null) as Record<string, unknown> | null;
   const nested = nestedData(body);
-  if (!res.ok || String(body?.status ?? "").toLowerCase() !== "success" || !nested?.reference) throw new Error(String(body?.message ?? `imeshindwa kuanzisha malipo (HTTP ${res.status}).`));
+  if (!res.ok || String(body?.status ?? "").toLowerCase() !== "success" || !nested?.reference) throw new Error("Imeshindikana kuanzisha malipo kwa sasa. Tafadhali hakikisha namba yako ni sahihi kisha ujaribu tena.");
   const returnedReference = String(nested.reference);
   await supabaseRest("chatpesa_activation_payments", { method: "POST", body: { user_id: userId, method: "splashpay", amount: ACTIVATION_FEE, phone: data.phone, external_id: returnedReference, status: "pending", metadata: body } });
-  return { ok: true, orderId: returnedReference, message: String(body?.message ?? "Ombi limetumwa. Thibitisha kwenye simu yako;.") };
+  return { ok: true, orderId: returnedReference, message: "Ombi la malipo limetumwa. Thibitisha kwenye simu yako; mfumo utakagua hali ya malipo moja kwa moja." };
 });
 
 export const checkFimiPayment = createServerFn({ method: "POST" }).validator(z.object({ orderId: z.string().regex(/^INV-[A-Za-z0-9-]{5,180}$/) })).handler(async ({ data }) => {
@@ -52,13 +52,13 @@ export const checkFimiPayment = createServerFn({ method: "POST" }).validator(z.o
   const body = await res.json().catch(() => null) as Record<string, unknown> | null;
   const nested = nestedData(body);
   if (!res.ok || String(body?.status ?? "").toLowerCase() !== "success" || !nested) {
-    throw new Error(String(body?.message ?? `SplashPay status haijapatikana (HTTP ${res.status}).`));
+    throw new Error("Imeshindikana kuthibitisha hali ya malipo kwa sasa. Tafadhali jaribu tena.");
   }
   const status = String(nested?.status ?? nested?.payment_status ?? "pending").toUpperCase();
   if (status === "SUCCESS") {
     await supabaseRest("chatpesa_activation_payments", { method: "PATCH", query: { id: `eq.${String(payment.id)}` }, body: { status: "approved", confirmed_at: new Date().toISOString(), metadata: body } });
     await supabaseRest("chatpesa_users", { method: "PATCH", query: { id: `eq.${userId}` }, body: { status: "active", activated_at: new Date().toISOString() } });
-    await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Akaunti imefunguliwa 🎉", message: "Malipo yako yamefanikiwa. Akaunti yako iko active; karibu Dashboard.", type: "success" } });
+    await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Akaunti imefunguliwa 🎉", message: "Malipo yako yamefanikiwa. Akaunti yako imewashwa; karibu Dashboard.", type: "success" } });
     return { status: "SUCCESS" };
   }
   if (["FAILED", "CANCELLED", "EXPIRED"].includes(status)) {

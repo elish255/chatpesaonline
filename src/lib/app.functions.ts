@@ -134,7 +134,7 @@ export const requestWithdrawal = createServerFn({ method: "POST" })
     });
     await supabaseRest("chatpesa_notifications", {
       method: "POST",
-      body: { user_id: userId, title: "Withdrawal imeombwa", message: `Ombi la withdrawal la TZS ${data.amount.toLocaleString()} limetumwa kwa ukaguzi.`, type: "info" },
+      body: { user_id: userId, title: "Withdrawal imeombwa", message: `Ombi la withdrawal la TZS ${data.amount.toLocaleString()} limetumwa kwa admin kwa ukaguzi.`, type: "info" },
     });
     return { ok: true };
   });
@@ -241,10 +241,10 @@ export const adminReviewWithdrawal = createServerFn({ method: "POST" })
       if (balance < amount) throw new Error("INSUFFICIENT_BALANCE");
       await supabaseRest("chatpesa_users", { method: "PATCH", query: { id: `eq.${userId}` }, body: { balance: balance - amount, withdrawn: Number(users[0]?.withdrawn ?? 0) + amount } });
       await supabaseRest("chatpesa_withdrawals", { method: "PATCH", query: { id: `eq.${data.withdrawalId}` }, body: { status: "approved", reviewed_at: new Date().toISOString() } });
-      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imeidhinishwa", message: `Withdrawal ya TZS ${amount.toLocaleString()} imeidhinishwa.`, type: "success" } });
+      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imeidhinishwa", message: `Withdrawal ya TZS ${amount.toLocaleString()} imeidhinishwa na admin.`, type: "success" } });
     } else {
       await supabaseRest("chatpesa_withdrawals", { method: "PATCH", query: { id: `eq.${data.withdrawalId}` }, body: { status: "rejected", reviewed_at: new Date().toISOString() } });
-      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imekataliwa", message: "Mfumo umekataa ombi lako la withdrawal. Wasiliana na support kwa maelezo zaidi.", type: "error" } });
+      await supabaseRest("chatpesa_notifications", { method: "POST", body: { user_id: userId, title: "Withdrawal imekataliwa", message: "Admin amekataa ombi lako la withdrawal. Wasiliana na support kwa maelezo zaidi.", type: "error" } });
     }
     return { ok: true };
   });

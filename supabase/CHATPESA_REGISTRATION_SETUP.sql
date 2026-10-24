@@ -32,7 +32,7 @@ create unique index if not exists chatpesa_users_phone_key on public.chatpesa_us
 create table if not exists public.chatpesa_activation_payments (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.chatpesa_users(id) on delete cascade,
-  method text not null check (method in ('fimipay','lipa_namba')),
+  method text not null check (method in ('splashpay')),
   amount bigint not null check (amount > 0),
   phone text not null,
   external_id text,

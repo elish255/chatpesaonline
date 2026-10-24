@@ -10,7 +10,7 @@ export const Route = createFileRoute("/lipa")({
   component: Lipa,
   head: () => ({ meta: [
     { title: "Lipa Activation — Chatpesa" },
-    { name: "description", content: `Lipa activation fee ya TZS ${ACTIVATION_FEE.toLocaleString()} kupitia automatic payments.` },
+    { name: "description", content: `Lipa activation fee ya TZS ${ACTIVATION_FEE.toLocaleString()} kupitia mfumo wa malipo ya simu.` },
     { name: "robots", content: "noindex, nofollow" },
   ] }),
 });
@@ -91,11 +91,11 @@ function Lipa() {
         <div className="mt-4 rounded-3xl bg-card p-5 shadow-card sm:p-6">
           <img src="/chatpesa-logo.jpg" alt="Chatpesa" className="mx-auto h-20 w-full object-contain" />
           <h1 className="mt-2 text-center text-2xl font-extrabold text-foreground">Activation Fee TZS {ACTIVATION_FEE.toLocaleString()}</h1>
-          <p className="mt-2 text-center text-sm text-muted-foreground">Lipa kwa SplashPay automatic payment. Hakuna Lipa Namba/manual payment.</p>
+          <p className="mt-2 text-center text-sm text-muted-foreground">Lipa kwa mfumo wa malipo ya simu. Hakuna Lipa Namba/manual payment.</p>
 
           <form onSubmit={startFimiPay} className="mt-5 space-y-4">
             <div><label className="text-sm font-semibold text-foreground">Namba ya simu</label><input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0712345678" className="mt-1 w-full rounded-xl bg-secondary px-4 py-3 text-sm text-foreground outline-none" /></div>
-            <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground"><strong className="text-foreground">SplashPay automatic:</strong> bonyeza LIPA SASA, kisha thibitisha ombi kwenye simu Yako kwa Kuweka Namba ya Siri.</div>
+            <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground"><strong className="text-foreground">Malipo ya moja kwa moja:</strong> bonyeza LIPA SASA, kisha thibitisha ombi kwenye simu yako Kwa kuweka Namba ya Siri.</div>
             {error && <p className="rounded-xl bg-destructive/10 p-3 text-sm font-semibold text-destructive">{error}</p>}
             {message && <p className="rounded-xl bg-success/10 p-3 text-sm font-semibold text-success">{message}</p>}
             <button type="submit" disabled={loading || !!orderId} className="flex w-full items-center justify-center gap-2 rounded-full gradient-success py-3.5 font-bold text-success-foreground shadow-cta disabled:opacity-60">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Smartphone className="h-4 w-4" />}{orderId ? "INASUBIRI UTHIBITISHO..." : "LIPA SASA"}</button>

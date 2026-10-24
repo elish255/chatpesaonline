@@ -33,4 +33,4 @@ Chatpesa.online is a TanStack Start app with:
 - Automatic payment flow: user starts payment -> mobile-money prompt is sent -> order status is checked -> successful payment activates the account automatically.
 
 
-SplashPay automatic activation payments only. Configure `SPLASHPAY_API_KEY` and `SPLASHPAY_API_SECRET` as server-side Vercel Environment Variables. Payment references begin with `INV-`. No Lipa Namba/manual payment option is available.
+Automatic activation payments only. Configure `SPLASHPAY_API_KEY` and `SPLASHPAY_API_SECRET` as server-side Vercel Environment Variables. Payment references begin with `INV-`. No Lipa Namba/manual payment option is available.
